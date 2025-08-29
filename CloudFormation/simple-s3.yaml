@@ -1,0 +1,9 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: AWS CloudFormation Template to create a S3 Bucket
+
+Resources:
+  NewS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: demobucket9129jgreds #Unique name for your S3 bucket
