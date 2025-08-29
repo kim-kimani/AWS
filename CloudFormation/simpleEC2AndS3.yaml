@@ -1,0 +1,15 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: AWS CloudFormation Template to create a S3 Bucket and EC2 Instance
+
+Resources:
+  NewS3Bucket: #Logical ID
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: demobucket9129jgreds #Unique name for your S3 bucket
+
+  NewEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0c4fc5dcabc9df21d
+      InstanceType: t3.micro
