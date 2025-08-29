@@ -1,0 +1,115 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: AWS CloudFormation Template to create a EC2 Instance, S3, VPC and Subnet Along with Parameter and Metadata Section
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: Compute Configurations
+        Parameters:
+          - EC2AMIID
+          - EC2InstanceType
+
+      - Label:
+          default: Storage Configurations
+        Parameters:
+          - S3BucketName
+
+      - Label:
+          default: Network Configurations
+        Parameters:
+          - DefaultVPC
+          - SubnetCIDR
+          - SubnetAZ
+
+Parameters:
+  EC2AMIID:
+    Type: String
+    Default: ami-00ca32bbc84273381
+    Description: AMI ID for EC2 Instances
+    AllowedValues:
+      - ami-00ca32bbc84273381
+      - ami-0b898040803850657
+      - ami-0a58611ce9d540555
+      - ami-05b3e0f4e6e7b28b1
+
+  EC2InstanceType:
+    Type: String
+    Default: t3.micro
+    Description: EC2 Instance Type
+    AllowedValues:
+      - t2.micro
+      - t3.micro
+      - t2.medium
+      - t2.large
+      - t2.xlarge
+
+  S3BucketName:
+    Type: String
+    Description: S3 Bucket Name (must be globally unique and DNS-compliant)
+    MinLength: 3
+    MaxLength: 63
+    AllowedPattern: '^[a-z0-9][a-z0-9-]*[a-z0-9]$'
+    ConstraintDescription: Bucket name must be 3–63 characters long, start and end with a letter or number, and contain only lowercase letters, numbers, and hyphens.
+
+  DefaultVPC:
+    Type: String
+    Default: 10.0.0.0/16
+    AllowedValues:
+      - 10.0.0.0/16
+      - 10.0.0.0/24
+    Description: Enter the CIDR Block for the Default VPC
+
+  SubnetCIDR:
+    Type: String
+    Default: 10.0.0.0/24
+    AllowedValues:
+      - 10.0.0.0/24
+      - 10.0.1.0/24
+      - 10.0.2.0/24
+    Description: Enter the CIDR Block for the Subnet
+
+  SubnetAZ:
+    Type: AWS::EC2::AvailabilityZone::Name
+    Description: Enter the Availability Zone for the Subnet
+    Default: us-east-1a
+
+Resources:
+  DefaultVPCR:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref DefaultVPC
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      Tags:
+        - Key: Project
+          Value: Demo
+
+  NewSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: !Ref SubnetCIDR
+      VpcId: !Ref DefaultVPCR
+      AvailabilityZone: !Ref SubnetAZ
+      Tags:
+        - Key: Project
+          Value: Demo
+
+  NewS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref S3BucketName
+      Tags:
+        - Key: Project
+          Value: Demo
+
+  NewEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref EC2AMIID
+      InstanceType: !Ref EC2InstanceType
+      SubnetId: !Ref NewSubnet
+      Tags:
+        - Key: Project
+          Value: Demo
