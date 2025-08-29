@@ -1,0 +1,60 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: AWS CloudFormation Template to create a S3 Bucket and EC2 Instance with Parameters Section
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: Compute Configurations
+        Parameters:
+          - EC2AMIID
+          - EC2InstanceType
+
+      - Label:
+          default: Storage Configurations
+        Parameters:
+          - S3BucketName
+
+Parameters:
+  EC2AMIID:
+    Type: String
+    Default: ami-00ca32bbc84273381
+    Description: AMI ID for EC2 Instances
+    AllowedValues:
+      - ami-00ca32bbc84273381
+      - ami-0b898040803850657
+      - ami-0a58611ce9d540555
+      - ami-05b3e0f4e6e7b28b1
+
+  EC2InstanceType:
+    Type: String
+    Default: t2.micro
+    Description: EC2 Instance Type
+    AllowedValues:
+      - t2.micro
+      - t3.micro
+      - t2.medium
+      - t2.large
+      - t2.xlarge
+
+  S3BucketName:
+    Type: String
+    Description: S3 Bucket Name (must be globally unique and DNS-compliant)
+    MinLength: 3
+    MaxLength: 63
+    AllowedPattern: '^[a-z0-9][a-z0-9-]*[a-z0-9]$'
+    ConstraintDescription: Bucket name must be 3–63 characters long, start and end with a letter or number, and contain only lowercase letters, numbers, and hyphens.
+
+
+Resources:
+  NewS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref S3BucketName
+
+  NewEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref EC2AMIID
+      InstanceType: !Ref EC2InstanceType
