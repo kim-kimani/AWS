@@ -2,6 +2,13 @@ AWSTemplateFormatVersion: '2010-09-09'
 
 Description: AWS CloudFormation Template to create a S3 Bucket and EC2 Instance with Parameters Section
 
+
+# ===================================================================
+# TEMPLATE METADATA
+# Defines user interface hints for AWS CloudFormation Console
+# Organizes parameters into logical groups for better user experience
+# ===================================================================
+
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:

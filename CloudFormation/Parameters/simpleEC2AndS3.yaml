@@ -2,7 +2,19 @@ AWSTemplateFormatVersion: '2010-09-09'
 
 Description: AWS CloudFormation Template to create a S3 Bucket and EC2 Instance with Parameters Section
 
+# ===================================================================
+# PARAMETERS
+# User-configurable inputs for the stack.
+# Each parameter includes validation rules to prevent deployment errors
+# and improve user experience in the AWS Console.
+# ===================================================================
+
 Parameters:
+  # EC2 AMI ID: Specifies the Amazon Machine Image for the instance
+  # - Must be a valid AMI ID in the target region (e.g., us-east-1)
+  # - Default: Amazon Linux 2 (HVM)
+  # - AllowedValues: Pre-approved, compatible AMIs to prevent invalid inputs
+
   EC2AMIID:
     Type: String
     Default: ami-0c4fc5dcabc9df21d
@@ -12,6 +24,11 @@ Parameters:
       - ami-0b898040803850657
       - ami-0a58611ce9d540555
       - ami-05b3e0f4e6e7b28b1
+
+  # EC2 Instance Type: Controls the size and cost of the instance
+  # - Default: t2.micro (free tier eligible)
+  # - AllowedValues: Common general-purpose types
+  # - Helps prevent accidental use of expensive instances
 
   EC2InstanceType:
     Type: String
@@ -23,6 +40,14 @@ Parameters:
       - t2.medium
       - t2.large
       - t2.xlarge
+
+  # S3 Bucket Name: User-defined name for the S3 bucket
+  # - Must be globally unique and DNS-compliant
+  # - Constraints enforce AWS S3 naming rules:
+  #   - 3–63 characters
+  #   - Only lowercase letters, numbers, and hyphens
+  #   - Cannot start/end with hyphen or look like an IP
+  # - ConstraintDescription provides user-friendly error messages
 
   S3BucketName:
     Type: String
